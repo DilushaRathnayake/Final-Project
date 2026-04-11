@@ -134,7 +134,7 @@ if(isset($_SESSION['user_id'])) {
 
 <div class="hero-container">
     <div class="hero-text">
-        <span class="feature-tag"><i class="fas fa-map-marker-alt"></i> Nuwara Eliya District Factory Portal</span>
+        <span class="feature-tag"><i class="fas fa-map-marker-alt"></i> Personal Finance Tracking System for Garment Employees in Nuwaraelita District</span>
         <h2><?php echo $text['hero_h2']; ?></h2>
         <p><?php echo $text['hero_p']; ?></p>
         
