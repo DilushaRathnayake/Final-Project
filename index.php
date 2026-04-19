@@ -166,8 +166,8 @@ if (isset($_GET['status'])) {
             <span class="role-badge badge-super">SUPERVISOR</span>
             <span class="role-badge badge-user">EMPLOYEE</span>
         </div>
-        <h1 style="font-size: 2rem; margin-bottom: 25px; line-height: 1.1;">Personal Finance and Expense Tracking System For Garment Employees In Nuwaraeliya District.</h1>
-        <h1 style="font-size: 3.5rem; margin-bottom: 25px; line-height: 1.1;">Unified <span style="color: var(--primary);">Financial</span> Management.</h1>
+        <h1 style="font-size: 2rem; margin-bottom: 25px; line-height: 1.1; font-style: italic;">Personal Finance and Expense Tracking System For Garment Employees In Nuwaraeliya District.</h1>
+        <h1 style="font-size: 3.0rem; margin-bottom: 25px; line-height: 1.1;">Unified <span style="color: var(--primary);">Financial</span> Management.</h1>
         <p style="color: var(--text-dim); font-size: 1.2rem; margin-bottom: 35px;">A multi-tier research platform for garment professionals. Manage payroll, oversee floor-level finances, and optimize individual savings with role-specific tools.</p>
         
         <div style="background: rgba(255,255,255,0.03); padding: 25px; border-radius: 20px; border: 1px solid var(--border-glass);">
@@ -266,21 +266,38 @@ if (isset($_GET['status'])) {
 </div>
 
 <div class="role-features">
-    <div class="feature-box">
-        <i class="fas fa-user-tie" style="color: var(--admin-color);"></i>
-        <h4>Admin Control</h4>
-        <p>Comprehensive system oversight and auditing for research purposes.</p>
-    </div>
-    <div class="feature-box">
-        <i class="fas fa-users-gear" style="color: var(--supervisor-color);"></i>
-        <h4>Supervisor Tools</h4>
-        <p>Monitor department-level financial trends and team loan risks.</p>
-    </div>
-    <div class="feature-box">
-        <i class="fas fa-wallet" style="color: var(--user-color);"></i>
-        <h4>Employee Hub</h4>
-        <p>Personalized dashboard for income tracking and savings growth.</p>
-    </div>
+    
+        <div class="feature-box">
+            <i class="fas fa-wallet"></i>
+            <h4>Income & Expense</h4>
+            <p>Log your daily transactions effortlessly. Visualize where your money goes with categorized expense charts and income logs.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-hand-holding-dollar"></i>
+            <h4>Loan Management</h4>
+            <p>Track your active loans and repayment schedules. Get reminders for installments to maintain a healthy credit score.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-piggy-bank"></i>
+            <h4>Savings & Seettu</h4>
+            <p>Digitally manage your Seettu cycles and personal savings. Track your contribution progress and withdrawal dates in one place.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-calendar-alt"></i>
+            <h4>Payday Planner</h4>
+            <p>Organize your monthly salary the moment it arrives. Allocate funds for bills, savings, and essentials automatically.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-bullseye"></i>
+            <h4>Budget Planner</h4>
+            <p>Set monthly financial goals and spending limits. Receive alerts when you are nearing your budget threshold.</p>
+        </div>
+        <div class="feature-box">
+            <i class="fas fa-bell"></i>
+            <h4>Smart Notifications</h4>
+            <p>Never miss a payment. Receive real-time alerts for loan dues, budget updates, and system-wide financial announcements.</p>
+        </div>
+    
 </div>
 
 <footer>
