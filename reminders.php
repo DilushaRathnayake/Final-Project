@@ -188,7 +188,17 @@ $reminders = mysqli_query($conn, "SELECT * FROM reminders WHERE user_id = '$user
         <a href="reports.php" class="nav-item">
             <i class="fas fa-chart-pie"></i> <span>Reports & Charts</span>
         </a>
+        <a href="profile.php" class="nav-item">
+            <i class="fas fa-chart-pie"></i> <span>My Profile</span>
+        </a>
     </div>
+
+    <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+        <a href="logout.php" class="logout-link">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+    </div>
+</div>
 
     <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
         <a href="logout.php" class="logout-link">
