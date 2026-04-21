@@ -49,6 +49,21 @@ for ($i = 5; $i >= 0; $i--) {
     $me = mysqli_query($conn, "SELECT SUM(amount) as t FROM expense_records WHERE user_id = '$user_id' AND DATE_FORMAT(date, '%Y-%m') = '$m'");
     $expenses[] = mysqli_fetch_assoc($me)['t'] ?? 0;
 }
+
+// --- 5. MONTHLY COMPARISON LOGIC ---
+$current_month_inc = end($incomes); 
+$prev_month_inc = $incomes[count($incomes)-2] ?? 0; 
+$current_month_exp = end($expenses); 
+$prev_month_exp = $expenses[count($expenses)-2] ?? 0;
+
+$inc_change_pc = ($prev_month_inc > 0) ? (($current_month_inc - $prev_month_inc) / $prev_month_inc) * 100 : 0;
+$exp_change_pc = ($prev_month_exp > 0) ? (($current_month_exp - $prev_month_exp) / $prev_month_exp) * 100 : 0;
+
+// --- 6. SMART COUNSELING LOGIC (NEW) ---
+$emergency_fund_goal = $total_expense * 6; // Goal: 6 months of expenses
+$debt_ratio = ($total_income > 0) ? ($total_loans / $total_income) * 100 : 0;
+$debt_status = ($debt_ratio > 40) ? "CRITICAL" : "HEALTHY";
+$debt_color = ($debt_ratio > 40) ? "var(--danger)" : "var(--success)";
 ?>
 
 <!DOCTYPE html>
@@ -61,58 +76,34 @@ for ($i = 5; $i >= 0; $i--) {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
-        
         :root {
             --bg: #f1f5f9; --sidebar-bg: #1e293b; --card-bg: #ffffff;
             --primary: #6366f1; --success: #10b981; --danger: #ef4444;
             --warning: #f59e0b; --text-main: #0f172a; --text-sub: #64748b; --border: #e2e8f0;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background: var(--bg); color: var(--text-main); font-family: 'Inter', sans-serif; display: flex; min-height: 100vh; }
-
-        /* SIDEBAR (Match Dashboard) */
-        .sidebar {
-            width: 260px; background: var(--sidebar-bg); height: 100vh; position: fixed;
-            padding: 30px 20px; display: flex; flex-direction: column; color: white;
-        }
-        .sidebar-brand { font-size: 1.4rem; font-weight: 800; margin-bottom: 40px; text-align: center; color: #fff; letter-spacing: 1px; }
-        
+        .sidebar { width: 260px; background: var(--sidebar-bg); height: 100vh; position: fixed; padding: 30px 20px; display: flex; flex-direction: column; color: white; }
+        .sidebar-brand { font-size: 1.4rem; font-weight: 800; margin-bottom: 40px; text-align: center; letter-spacing: 1px; }
         .nav-links { flex: 1; overflow-y: auto; }
-        .nav-links::-webkit-scrollbar { width: 4px; }
-        .nav-links::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.1); }
-
-        .nav-group-label { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; margin: 25px 0 10px 10px; letter-spacing: 1px; }
-
-        .nav-item {
-            display: flex; align-items: center; padding: 12px 15px; color: #cbd5e1; text-decoration: none;
-            border-radius: 10px; margin-bottom: 4px; transition: 0.3s; font-size: 0.9rem;
-        }
+        .nav-group-label { font-size: 0.7rem; text-transform: uppercase; color: #94a3b8; margin: 25px 0 10px 10px; }
+        .nav-item { display: flex; align-items: center; padding: 12px 15px; color: #cbd5e1; text-decoration: none; border-radius: 10px; margin-bottom: 4px; font-size: 0.9rem; transition: 0.3s; }
         .nav-item i { margin-right: 12px; width: 20px; text-align: center; }
         .nav-item:hover, .nav-item.active { background: rgba(255, 255, 255, 0.1); color: white; }
         .nav-item.active { background: var(--primary); }
-
         .logout-link { padding: 15px; color: #fca5a5; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 10px; }
-
-        /* MAIN CONTENT */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; }
-        
-        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 30px; }
+        .kpi-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 25px; }
         .kpi-card { background: var(--card-bg); padding: 25px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
         .kpi-card small { color: var(--text-sub); font-weight: 600; font-size: 0.75rem; text-transform: uppercase; }
         .kpi-card .value { font-size: 1.3rem; font-weight: 800; margin-top: 8px; }
-
         .report-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 25px; margin-bottom: 30px; }
-        .card { background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 20px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05); }
-
+        .card { background: var(--card-bg); border: 1px solid var(--border); padding: 25px; border-radius: 20px; }
         table { width: 100%; border-collapse: collapse; margin-top: 15px; }
         th { text-align: left; padding: 15px; background: #f8fafc; color: var(--text-sub); font-size: 0.75rem; text-transform: uppercase; }
         td { padding: 15px; border-bottom: 1px solid #f8fafc; font-size: 0.9rem; }
-        
         .badge { padding: 5px 12px; border-radius: 20px; font-size: 0.7rem; font-weight: 700; }
-        .btn-action { background: var(--primary); color: white; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; transition: 0.2s; }
-        .btn-action:hover { opacity: 0.9; transform: translateY(-1px); }
-        
+        .btn-action { background: var(--primary); color: white; padding: 12px 24px; border: none; border-radius: 12px; cursor: pointer; font-weight: 700; }
         @media print { .sidebar, .btn-action { display: none; } .main-content { margin: 0; width: 100%; } }
     </style>
 </head>
@@ -121,7 +112,7 @@ for ($i = 5; $i >= 0; $i--) {
 <div class="sidebar">
     <div class="sidebar-brand">SMART BUDGET</div>
     <div class="nav-links">
-        <a href="dashboard.php" class="nav-item">
+        <a href="dashboard.php" class="nav-item ">
             <i class="fas fa-home"></i> <span>Dashboard</span>
         </a>
         
@@ -160,6 +151,9 @@ for ($i = 5; $i >= 0; $i--) {
         <a href="reports.php" class="nav-item active">
             <i class="fas fa-chart-pie"></i> <span>Reports & Charts</span>
         </a>
+        <a href="profile.php" class="nav-item">
+            <i class="fas fa-chart-pie"></i> <span>My Profile</span>
+        </a>
     </div>
 
     <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
@@ -197,6 +191,33 @@ for ($i = 5; $i >= 0; $i--) {
         </div>
     </div>
 
+    <div class="kpi-grid">
+        <div class="kpi-card" style="border-left: 5px solid var(--success);">
+            <small>Income Trends</small>
+            <div class="value">
+                <?php echo ($inc_change_pc >= 0) ? '+' : ''; echo number_format($inc_change_pc, 1); ?>%
+                <i class="fas <?php echo ($inc_change_pc >= 0) ? 'fa-caret-up' : 'fa-caret-down'; ?>" style="color: <?php echo ($inc_change_pc >= 0) ? 'var(--success)' : 'var(--danger)'; ?>;"></i>
+            </div>
+        </div>
+        <div class="kpi-card" style="border-left: 5px solid var(--danger);">
+            <small>Expense Trends</small>
+            <div class="value">
+                <?php echo ($exp_change_pc >= 0) ? '+' : ''; echo number_format($exp_change_pc, 1); ?>%
+                <i class="fas <?php echo ($exp_change_pc >= 0) ? 'fa-caret-up' : 'fa-caret-down'; ?>" style="color: <?php echo ($exp_change_pc >= 0) ? 'var(--danger)' : 'var(--success)'; ?>;"></i>
+            </div>
+        </div>
+        <div class="kpi-card" style="border-top: 4px solid var(--primary);">
+            <small>Emergency Fund Goal</small>
+            <div class="value" style="font-size: 1.1rem;">LKR <?php echo number_format($emergency_fund_goal); ?></div>
+            <p style="font-size: 0.65rem; color: var(--text-sub); margin-top: 5px;">Goal for 6 months security</p>
+        </div>
+        <div class="kpi-card" style="border-top: 4px solid <?php echo $debt_color; ?>;">
+            <small>Debt-to-Income Ratio</small>
+            <div class="value" style="color: <?php echo $debt_color; ?>;"><?php echo number_format($debt_ratio, 1); ?>%</div>
+            <p style="font-size: 0.65rem; font-weight:700; color: <?php echo $debt_color; ?>;"><?php echo $debt_status; ?></p>
+        </div>
+    </div>
+
     <div class="report-layout">
         <div class="card">
             <h3 style="font-size: 1rem; margin-bottom: 20px;"><i class="fas fa-chart-line" style="color: var(--primary);"></i> 6-Month Trend</h3>
@@ -205,21 +226,27 @@ for ($i = 5; $i >= 0; $i--) {
             </div>
         </div>
         <div class="card">
-            <h3 style="font-size: 1rem; margin-bottom: 20px;"><i class="fas fa-info-circle" style="color: var(--primary);"></i> Insight</h3>
-            <p style="font-size: 0.9rem; color: var(--text-sub); line-height: 1.6;">
-                This automated report consolidates all modules of the <strong>Smart Budget</strong> system, including income, expenses, active seettu groups, and pending loan obligations. Data is synced in real-time.
+            <h3 style="font-size: 1rem; margin-bottom: 20px;"><i class="fas fa-lightbulb" style="color: var(--warning);"></i> Financial Counsel</h3>
+            <p style="font-size: 0.85rem; color: var(--text-sub); line-height: 1.6;">
+                <?php if($debt_ratio > 40): ?>
+                    <strong style="color: var(--danger);">Warning:</strong> Your debt ratio is high (<?php echo number_format($debt_ratio, 1); ?>%). Try to avoid new loans and focus on clearing existing ones.
+                <?php else: ?>
+                    <strong style="color: var(--success);">Good News:</strong> Your debt is within healthy limits. Keep up the good work!
+                <?php endif; ?>
+                <br><br>
+                Based on your current spending, you should aim for a <strong>LKR <?php echo number_format($emergency_fund_goal); ?></strong> emergency fund to cover 6 months of living costs.
             </p>
         </div>
     </div>
 
-    <div class="card" style="margin-top: 10px;">
+    <div class="card">
         <h3 style="font-size: 1rem; margin-bottom: 15px;"><i class="fas fa-history" style="color: var(--primary);"></i> Performance History</h3>
         <table>
             <thead>
                 <tr>
                     <th>Month</th>
-                    <th>Inflow (LKR)</th>
-                    <th>Outflow (LKR)</th>
+                    <th>Inflow</th>
+                    <th>Outflow</th>
                     <th>Net Savings</th>
                     <th>Status</th>
                 </tr>
@@ -250,7 +277,6 @@ for ($i = 5; $i >= 0; $i--) {
 <script>
 document.addEventListener("DOMContentLoaded", function() {
     const ctx = document.getElementById('masterChart').getContext('2d');
-    
     new Chart(ctx, {
         type: 'line',
         data: {
@@ -260,43 +286,23 @@ document.addEventListener("DOMContentLoaded", function() {
                 data: <?php echo json_encode($incomes); ?>,
                 borderColor: '#10b981',
                 backgroundColor: 'rgba(16, 185, 129, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4
+                fill: true, tension: 0.4
             }, {
                 label: 'Expenses',
                 data: <?php echo json_encode($expenses); ?>,
                 borderColor: '#ef4444',
                 backgroundColor: 'rgba(239, 68, 68, 0.1)',
-                borderWidth: 3,
-                fill: true,
-                tension: 0.4
+                fill: true, tension: 0.4
             }]
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Prevents infinite height expansion
-            plugins: {
-                legend: { 
-                    position: 'bottom',
-                    labels: { padding: 20, font: { family: 'Inter', size: 12 } }
-                }
-            },
-            scales: {
-                y: { 
-                    beginAtZero: true, 
-                    grid: { color: '#f1f5f9' },
-                    ticks: { font: { family: 'Inter' } }
-                },
-                x: { 
-                    grid: { display: false },
-                    ticks: { font: { family: 'Inter' } }
-                }
-            }
+            maintainAspectRatio: false,
+            plugins: { legend: { position: 'bottom' } },
+            scales: { y: { beginAtZero: true } }
         }
     });
 });
 </script>
-
 </body>
 </html>
