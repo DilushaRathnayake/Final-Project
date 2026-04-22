@@ -68,43 +68,72 @@ $stats = mysqli_fetch_assoc($stats_res);
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        :root { --primary: #6366f1; --accent: #10b981; --dark: #0f172a; --bg: #f8fafc; --white: #ffffff; --text: #334155; }
+        :root {
+            --sidebar-bg: #0f172a; /* Dark Navy */
+            --sidebar-hover: #1e293b;
+            --primary: #6366f1; /* Indigo */
+            --accent: #10b981; /* Emerald */
+            --bg-light: #f8fafc;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --white: #ffffff;
+        }
         
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         body { background: var(--bg); display: flex; color: var(--text); min-height: 100vh; }
 
-        /* Sidebar - Adjusted for bottom logout */
-        .sidebar { 
-            width: 260px; 
-            background: var(--dark); 
-            color: white; 
-            position: fixed; 
-            height: 100vh; 
-            padding: 30px 20px; 
-            display: flex; 
-            flex-direction: column; 
+        /* --- SIDEBAR STYLE --- */
+        .sidebar {
+            width: 260px;
+            background-color: var(--sidebar-bg);
+            color: var(--white);
+            display: flex;
+            flex-direction: column;
+            position: fixed;
+            height: 100%;
+            transition: all 0.3s ease;
+            z-index: 1000;
         }
-        .sidebar h2 { color: var(--accent); margin-bottom: 40px; font-size: 1.4rem; font-weight: 800; }
-        .nav-link { display: flex; align-items: center; padding: 12px 15px; color: #94a3b8; text-decoration: none; border-radius: 12px; margin-bottom: 8px; transition: 0.3s; }
-        .nav-link i { margin-right: 12px; font-size: 1.1rem; width: 20px; }
-        .nav-link:hover, .nav-link.active { background: #1e293b; color: white; }
-        .nav-link.active { border-left: 4px solid var(--accent); }
 
-        /* Push Logout to bottom */
-        .logout-section {
-            margin-top: auto;
-            padding: 20px 0;
-            border-top: 1px solid rgba(255,255,255,0.05);
+        .sidebar-header {
+            padding: 30px 20px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
         }
-        .logout-section a {
-            text-decoration: none;
+
+        .sidebar-header h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            color: var(--accent);
+        }
+
+        .nav-links { padding: 20px 10px; flex-grow: 1; }
+
+        .nav-item {
             display: flex;
             align-items: center;
-            gap: 12px;
             padding: 12px 15px;
+            color: #94a3b8;
+            text-decoration: none;
+            border-radius: 10px;
+            margin-bottom: 8px;
             transition: 0.3s;
         }
 
+        .nav-item i { width: 25px; font-size: 1.1rem; margin-right: 15px; }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--sidebar-hover);
+            color: var(--white);
+        }
+
+        .nav-item.active { border-left: 4px solid var(--primary); }
+
+        .logout-section {
+            padding: 20px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+        }
         /* Content */
         .main-content { margin-left: 260px; width: calc(100% - 260px); padding: 40px; }
         .page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
@@ -148,20 +177,36 @@ $stats = mysqli_fetch_assoc($stats_res);
 <body>
 
 <div class="sidebar">
-    <h2>SMART BUDGET</h2>
-    <div style="margin-top:20px">
-        <a href="admin_dashboard.php" class="nav-link"><i class="fas fa-th-large"></i> Dashboard</a>
-        <a href="manage_employees.php" class="nav-link"><i class="fas fa-users-cog"></i> Manage Employees</a>
-        <a href="salary_process.php" class="nav-link active"><i class="fas fa-wallet"></i> Payroll Center</a>
-        <a href="factory_seettu.php" class="nav-link"><i class="fas fa-layer-group"></i> Factory Seettu</a>
+        <div class="sidebar-header">
+            <h2>SMART<span style="color:white">BUDGET</span></h2>
+        </div>
+        
+        <div class="nav-links">
+            <a href="admin_dashboard.php" class="nav-item active">
+                <i class="fas fa-th-large"></i> <span>Dashboard</span>
+            </a>
+            <a href="manage_employees.php" class="nav-item">
+                <i class="fas fa-users"></i> <span>Manage Employees</span>
+            </a>
+            <a href="salary_process.php" class="nav-item">
+                <i class="fas fa-file-invoice-dollar"></i> <span>Payroll Center</span>
+            </a>
+            <a href="factory_seettu.php" class="nav-item">
+                <i class="fas fa-layer-group"></i> <span>Factory Seettu</span>
+            </a>
+            <a href="profile.php" class="nav-item">
+    <i class="fas fa-user-circle"></i> <span>My Profile</span>
+</a>
+        </div>
+        
+
+        <div class="logout-section">
+            <a href="logout.php" class="nav-item" style="color: #fca5a5;">
+                <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
+            </a>
+        </div>
     </div>
 
-    <div class="logout-section">
-        <a href="logout.php" style="color: #fca5a5;">
-            <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
-        </a>
-    </div>
-</div>
 
 <div class="main-content">
     <div class="page-header">
@@ -205,12 +250,23 @@ $stats = mysqli_fetch_assoc($stats_res);
             <h3><i class="fas fa-cog" style="color: var(--primary);"></i> Process Salaries</h3>
             <form method="POST">
                 <label>Target Department</label>
-                <select name="dept_name" required>
-                    <option value="Sewing">Sewing Section</option>
-                    <option value="Cutting">Cutting Section</option>
-                    <option value="Packing">Packing & Quality</option>
-                    <option value="Office">Office Staff</option>
-                </select>
+                <select name="dept" required>
+    <option value="" disabled selected>Select Department</option>
+    <option value="Sewigning">Sewigning</option>
+    <option value="Design & Sampling">Design & Sampling</option>
+    <option value="Production">Production / Sewing</option>
+    <option value="Cutting">Cutting</option>
+    <option value="Quality Control">Quality Control (QC)</option>
+    <option value="Finishing">Finishing</option>
+    <option value="Planning">Planning</option>
+    <option value="HR">Human Resources (HR)</option>
+    <option value="Finance">Finance & Accounting</option>
+    <option value="Stores">Stores / Inventory</option>
+    <option value="Maintenance">Maintenance</option>
+    <option value="Procurement">Procurement / Purchasing</option>
+    <option value="Logistics">Shipping / Logistics</option>
+</select>
+
                 
                 <label>Standard Gross Amount (LKR)</label>
                 <input type="number" name="gross_amount" placeholder="e.g. 50000" step="0.01" required>
