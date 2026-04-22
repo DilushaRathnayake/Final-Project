@@ -181,11 +181,16 @@ $total_members = $count_data['total'];
             <h2>SMART<span style="color:white">BUDGET</span></h2>
         </div>
         
+        <div class="sidebar">
+        <div class="sidebar-header">
+            <h2>SMART<span style="color:white">BUDGET</span></h2>
+        </div>
+        
         <div class="nav-links">
-            <a href="admin_dashboard.php" class="nav-item">
+            <a href="admin_dashboard.php" class="nav-item active">
                 <i class="fas fa-th-large"></i> <span>Dashboard</span>
             </a>
-            <a href="manage_employees.php" class="nav-item active">
+            <a href="manage_employees.php" class="nav-item">
                 <i class="fas fa-users"></i> <span>Manage Employees</span>
             </a>
             <a href="salary_process.php" class="nav-item">
@@ -194,13 +199,19 @@ $total_members = $count_data['total'];
             <a href="factory_seettu.php" class="nav-item">
                 <i class="fas fa-layer-group"></i> <span>Factory Seettu</span>
             </a>
+            <a href="profile.php" class="nav-item">
+    <i class="fas fa-user-circle"></i> <span>My Profile</span>
+</a>
         </div>
+        
+
         <div class="logout-section">
             <a href="logout.php" class="nav-item" style="color: #fca5a5;">
                 <i class="fas fa-sign-out-alt"></i> <span>Log Out</span>
             </a>
         </div>
     </div>
+
 
     <div class="content">
         <div class="header">
