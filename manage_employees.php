@@ -181,11 +181,6 @@ $total_members = $count_data['total'];
             <h2>SMART<span style="color:white">BUDGET</span></h2>
         </div>
         
-        <div class="sidebar">
-        <div class="sidebar-header">
-            <h2>SMART<span style="color:white">BUDGET</span></h2>
-        </div>
-        
         <div class="nav-links">
             <a href="admin_dashboard.php" class="nav-item active">
                 <i class="fas fa-th-large"></i> <span>Dashboard</span>
