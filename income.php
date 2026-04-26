@@ -182,12 +182,12 @@ $fetch_income = mysqli_query($conn, "SELECT * FROM income_records WHERE user_id 
 <div class="sidebar">
     <div class="sidebar-brand">SMART BUDGET</div>
     <div class="nav-links">
-        <a href="dashboard.php" class="nav-item">
+        <a href="dashboard.php" class="nav-item active">
             <i class="fas fa-home"></i> <span>Dashboard</span>
         </a>
         
         <div class="nav-group-label">Money Management</div>
-        <a href="income.php" class="nav-item active">
+        <a href="income.php" class="nav-item">
             <i class="fas fa-hand-holding-usd"></i> <span>Live Income</span>
         </a>
         <a href="expenses.php" class="nav-item">
@@ -219,15 +219,19 @@ $fetch_income = mysqli_query($conn, "SELECT * FROM income_records WHERE user_id 
             <i class="fas fa-bell"></i> <span>Reminders</span>
         </a>
         <a href="reports.php" class="nav-item">
-            <i class="fas fa-chart-pie"></i> <span>Reports and Charts</span>
+            <i class="fas fa-chart-pie"></i> <span>Reports & Charts</span>
+        </a>
+        <a href="profile.php" class="nav-item">
+            <i class="fas fa-chart-pie"></i> <span>My Profile</span>
         </a>
     </div>
 
-    <a href="logout.php" class="logout-link">
-        <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-    </a>
+    <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+        <a href="logout.php" class="logout-link">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+    </div>
 </div>
-
 <div class="main-wrapper">
     <div class="header-section">
         <div>
