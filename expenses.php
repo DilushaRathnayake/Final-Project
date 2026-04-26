@@ -236,7 +236,7 @@ $fetch_expenses = mysqli_query($conn, "SELECT * FROM expense_records WHERE user_
 <div class="sidebar">
     <div class="sidebar-brand">SMART BUDGET</div>
     <div class="nav-links">
-        <a href="dashboard.php" class="nav-item">
+        <a href="dashboard.php" class="nav-item ">
             <i class="fas fa-home"></i> <span>Dashboard</span>
         </a>
         
@@ -273,13 +273,18 @@ $fetch_expenses = mysqli_query($conn, "SELECT * FROM expense_records WHERE user_
             <i class="fas fa-bell"></i> <span>Reminders</span>
         </a>
         <a href="reports.php" class="nav-item">
-            <i class="fas fa-chart-pie"></i> <span>Reports</span>
+            <i class="fas fa-chart-pie"></i> <span>Reports & Charts</span>
+        </a>
+        <a href="profile.php" class="nav-item">
+            <i class="fas fa-chart-pie"></i> <span>My Profile</span>
         </a>
     </div>
 
-    <a href="logout.php" class="logout-link">
-        <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
-    </a>
+    <div style="margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px;">
+        <a href="logout.php" class="logout-link">
+            <i class="fas fa-sign-out-alt"></i> <span>Logout</span>
+        </a>
+    </div>
 </div>
 
 <div class="main-wrapper">
@@ -370,7 +375,7 @@ $fetch_expenses = mysqli_query($conn, "SELECT * FROM expense_records WHERE user_
                             <tr>
                                 <td style="color: var(--text-sub);"><?php echo date('M d', strtotime($row['date'])); ?></td>
                                 <td style="font-weight: 700; color: var(--text-main);"><?php echo $row['category']; ?></td>
-                                <td style="color: var(--text-sub);"><?php echo htmlspecialchars($row['note']); ?></td>
+                                <td style="color: var(--text-sub);"><?php echo htmlspecialchars($row['note'] ?? ''); ?></td>
                                 <td>
                                     <span class="tag <?php echo ($row['type'] == 'Fixed') ? 'tag-fixed' : 'tag-var'; ?>">
                                         <?php echo $row['type']; ?>
